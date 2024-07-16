@@ -178,6 +178,10 @@ pub fn create_bare_venv(
             )?;
             uv_fs::replace_symlink("python", scripts.join("pypy"))?;
         }
+
+        if interpreter.markers().implementation_name() == "graalpy" {
+            uv_fs::replace_symlink("python", scripts.join("graalpy"))?;
+        }
     }
 
     // No symlinking on Windows, at least not on a regular non-dev non-admin Windows install.
@@ -189,13 +193,31 @@ pub fn create_bare_venv(
             &scripts,
             python_home,
         )?;
-        copy_launcher_windows(
-            WindowsExecutable::Pythonw,
-            interpreter,
-            &base_python,
-            &scripts,
-            python_home,
-        )?;
+
+        if interpreter.markers().implementation_name() == "graalpy" {
+            copy_launcher_windows(
+                WindowsExecutable::GraalPy,
+                interpreter,
+                &base_python,
+                &scripts,
+                python_home,
+            )?;
+            copy_launcher_windows(
+                WindowsExecutable::PythonMajor,
+                interpreter,
+                &base_python,
+                &scripts,
+                python_home,
+            )?;
+        } else {
+            copy_launcher_windows(
+                WindowsExecutable::Pythonw,
+                interpreter,
+                &base_python,
+                &scripts,
+                python_home,
+            )?;
+        }
 
         if interpreter.markers().implementation_name() == "pypy" {
             copy_launcher_windows(
@@ -380,6 +402,8 @@ enum WindowsExecutable {
     PyPyw,
     // The `pypy3.<minor>w.exe` executable
     PyPyMajorMinorw,
+    // The `graalpy.exe` executable
+    GraalPy,
 }
 
 impl WindowsExecutable {
@@ -417,6 +441,7 @@ impl WindowsExecutable {
                     interpreter.python_minor()
                 )
             }
+            WindowsExecutable::GraalPy => String::from("graalpy.exe"),
         }
     }
 
@@ -434,6 +459,7 @@ impl WindowsExecutable {
             WindowsExecutable::PyPyMajorMinor => "venvlauncher.exe",
             WindowsExecutable::PyPyw => "venvwlauncher.exe",
             WindowsExecutable::PyPyMajorMinorw => "venvwlauncher.exe",
+            WindowsExecutable::GraalPy => "venvlauncher.exe",
         }
     }
 }
