@@ -341,6 +341,16 @@ pub fn create_bare_venv(
         pyvenv_cfg_data.push(("prompt".to_string(), prompt));
     }
 
+    if cfg!(windows) && interpreter.markers().implementation_name() == "graalpy" {
+        pyvenv_cfg_data.push((
+            "venvlauncher_command".to_string(),
+            python_home
+                .join("graalpy.exe")
+                .simplified_display()
+                .to_string(),
+        ));
+    }
+
     let mut pyvenv_cfg = BufWriter::new(File::create(location.join("pyvenv.cfg"))?);
     write_cfg(&mut pyvenv_cfg, &pyvenv_cfg_data)?;
     drop(pyvenv_cfg);
