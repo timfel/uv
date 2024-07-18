@@ -752,8 +752,8 @@ jobs:
       - name: Graalpy info
         run: |
           Get-Command graalpy
-          $GRAAL_PYTHONHOME = graalpy -c "print('', __graalpython__.home)"
-          echo ("GRAAL_PYTHONHOME=" + $GRAAL_PYTHONHOME.Trim()) >> $Env:GITHUB_ENV
+          # $GRAAL_PYTHONHOME = graalpy -c "print('', __graalpython__.home)"
+          # echo ("GRAAL_PYTHONHOME=" + $GRAAL_PYTHONHOME.Trim()) >> $Env:GITHUB_ENV
 
       - name: "Create a virtual environment"
         run: |
