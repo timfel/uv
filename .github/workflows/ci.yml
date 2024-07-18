@@ -685,7 +685,9 @@ jobs:
         run: chmod +x ./uv
 
       - name: Graalpy info
-        run: which graalpy
+        run: |
+          which graalpy
+          echo "GRAAL_PYTHONHOME=$(graalpy -c 'print(__graalpython__.home)')" >> $GITHUB_ENV
 
       - name: "Create a virtual environment"
         run: |
@@ -748,7 +750,10 @@ jobs:
           name: uv-windows-${{ github.sha }}
 
       - name: Graalpy info
-        run: Get-Command graalpy
+        run: |
+          Get-Command graalpy
+          $GRAAL_PYTHONHOME = graalpy -c "print('', __graalpython__.home)"
+          echo ("GRAAL_PYTHONHOME=" + $GRAAL_PYTHONHOME.Trim()) >> $Env:GITHUB_ENV
 
       - name: "Create a virtual environment"
         run: |
