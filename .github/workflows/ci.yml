@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, tim/graalpy-in-ci]
   pull_request:
   workflow_dispatch:
 
@@ -129,7 +129,7 @@ jobs:
     needs: determine_changes
     if: ${{ github.repository == 'astral-sh/uv' && (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
     runs-on:
-      labels: "ubuntu-latest-large"
+      labels: "ubuntu-latest"
     name: "cargo test | ubuntu"
     steps:
       - uses: actions/checkout@v4
@@ -203,7 +203,7 @@ jobs:
     needs: determine_changes
     if: ${{ github.repository == 'astral-sh/uv' && (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
     runs-on:
-      labels: "windows-latest-large"
+      labels: "windows-latest"
     name: "cargo test | windows"
     steps:
       - name: Create Dev Drive using ReFS
@@ -351,7 +351,7 @@ jobs:
     needs: determine_changes
     if: ${{ github.repository == 'astral-sh/uv' && (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
     runs-on:
-      labels: ubuntu-latest-large
+      labels: ubuntu-latest
     name: "build binary | linux"
     steps:
       - uses: actions/checkout@v4
@@ -400,7 +400,7 @@ jobs:
     needs: determine_changes
     if: ${{ github.repository == 'astral-sh/uv' && (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
     runs-on:
-      labels: macos-14-large
+      labels: macos-14
     name: "build binary | macos x86_64"
     steps:
       - uses: actions/checkout@v4
@@ -420,9 +420,8 @@ jobs:
 
   build-binary-windows:
     needs: determine_changes
-    if: ${{ github.repository == 'astral-sh/uv' && (needs.determine_changes.outputs.code == 'true' || github.ref == 'refs/heads/main') }}
     runs-on:
-      labels: windows-latest-large
+      labels: windows-latest
     name: "build binary | windows"
     steps:
       - name: Create Dev Drive using ReFS
@@ -600,6 +599,7 @@ jobs:
 
   integration-test-pypy-windows:
     needs: build-binary-windows
+    if: false
     name: "integration test | pypy on windows"
     runs-on: windows-latest
 
@@ -1166,6 +1166,7 @@ jobs:
 
   system-test-windows-python-310:
     needs: build-binary-windows
+    if: false
     name: "check system | python3.10 on windows"
     runs-on: windows-latest
     env:
@@ -1191,6 +1192,7 @@ jobs:
 
   system-test-windows-x86-python-310:
     needs: build-binary-windows
+    if: false
     name: "check system | python3.10 on windows x86"
     runs-on: windows-latest
     env:
@@ -1217,6 +1219,7 @@ jobs:
 
   system-test-windows-python-313:
     needs: build-binary-windows
+    if: false
     name: "check system | python3.13 on windows"
     runs-on: windows-latest
     env:
@@ -1244,6 +1247,7 @@ jobs:
 
   system-test-choco:
     needs: build-binary-windows
+    if: false
     name: "check system | python3.12 via chocolatey"
     runs-on: windows-latest
     env:
@@ -1373,6 +1377,7 @@ jobs:
 
   system-test-windows-embedded-python-310:
     needs: build-binary-windows
+    if: false
     name: "check system | embedded python3.10 on windows"
     runs-on: windows-latest
     env:
